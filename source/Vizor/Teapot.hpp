@@ -1,0 +1,4 @@
+
+namespace Vizor {
+	void sing();
+}
