@@ -35,6 +35,12 @@ define_target 'vizor-library' do |target|
 	target.depends :platform
 	target.depends 'Language/C++14', private: true
 	
+	target.depends 'Library/Logger'
+	target.depends 'Library/Units'
+	target.depends 'Library/Memory'
+	
+	target.depends 'Library/vulkan'
+	
 	target.provides 'Library/Vizor' do
 		append linkflags [
 			->{install_prefix + 'lib/libVizor.a'},
@@ -49,36 +55,12 @@ define_target 'vizor-test' do |target|
 		run tests: 'Vizor', source_files: test_root.glob('Vizor/**/*.cpp'), arguments: arguments
 	end
 	
+	target.depends 'Language/C++14', private: true
+	
 	target.depends 'Library/UnitTest'
 	target.depends 'Library/Vizor'
 	
 	target.provides 'Test/Vizor'
-end
-
-define_target 'vizor-executable' do |target|
-	target.build do
-		source_root = target.package.path + 'source'
-		
-		build executable: 'Vizor', source_files: source_root.glob('Vizor.cpp')
-	end
-	
-	target.depends 'Build/Files'
-	target.depends 'Build/Clang'
-	
-	target.depends :platform
-	target.depends 'Language/C++14', private: true
-	
-	target.depends 'Library/Vizor'
-	target.provides 'Executable/Vizor'
-end
-
-define_target 'vizor-run' do |target|
-	target.build do |*arguments|
-		run executable: 'Vizor', arguments: arguments
-	end
-	
-	target.depends 'Executable/Vizor'
-	target.provides 'Run/Vizor'
 end
 
 # Configurations
@@ -102,4 +84,10 @@ end
 
 define_configuration "vizor" do |configuration|
 	configuration.public!
+	
+	configuration.require 'logger'
+	configuration.require 'units'
+	configuration.require 'memory'
+	
+	configuration.require 'vulkan-sdk'
 end

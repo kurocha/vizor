@@ -1,10 +1,6 @@
 # Vizor
 
-Vizor is a fantastic project with lots of potential.
-
-For examples and documentation please see the main [project page][1].
-
-[1]: http://teapot.nz/
+Vizor is a high level support library for Vulkan. It doesn't hide the implementation details, but provides higher level building blocks, while still encouraging you to use low-level interfaces where it makes sense to do so.
 
 [![Build Status](https://travis-ci.org/kurocha/vizor.svg?branch=master)](https://travis-ci.org/kurocha/vizor)
 
@@ -37,6 +33,26 @@ You can run the tool by executing the following:
 
 	$ teapot Run/Vizor
 
+### Application Design
+
+`Vizor::Context` provides high level access to the renderer, including `vk::Device` and `vk::PhysicalDevice`.
+
+	Vizor::Context context;
+	
+	// Output to window:
+	Vizor::Window window(context);
+	
+	// Output to framebuffer:
+	Vizor::Framebuffer framebuffer(context);
+	
+	Vizor::MemoryManager memory_manager(context);
+	memory_manager->allocate(memory_type, 1024*1024*24);
+	
+	Vizor::Texture texture(context);
+	texture->load(pixel_buffer);
+	
+	Vizor::Pipeline pipeline;
+	
 ## Contributing
 
 1. Fork it.
