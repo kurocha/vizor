@@ -2,7 +2,7 @@
 //  Context.hpp
 //  This file is part of the "Vizor" project and released under the MIT License.
 //
-//  Created by Samuel Williams on 14/10/2017.
+//  Created by Samuel Williams on 7/12/2017.
 //  Copyright, 2017, by Samuel Williams. All rights reserved.
 //
 
@@ -10,46 +10,31 @@
 
 #include <vulkan/vulkan.hpp>
 
-#include "DebugReport.hpp"
-
 namespace Vizor
 {
 	class Context
 	{
 	public:
-		Context(bool enable_validations = false);
+		Context(const vk::Instance & instance, const vk::PhysicalDevice & physical_device, vk::UniqueDevice && device, vk::Optional<const vk::AllocationCallbacks> allocation_callbacks = nullptr) : _instance(instance), _physical_device(physical_device), _device(device), _allocation_callbacks(allocation_callbacks) {}
 		virtual ~Context();
 		
-		vk::Optional<const vk::AllocationCallbacks> allocator() {
-			return _allocator;
+		vk::Instance instance() const noexcept {
+			return _instance;
 		}
 		
-		vk::UniqueDeviceMemory allocate(const vk::MemoryRequirements & requirements, const vk::MemoryPropertyFlags & flags = vk::MemoryPropertyFlags());
-		vk::UniqueDeviceMemory allocate(const vk::Image & image, const vk::MemoryPropertyFlags & flags = vk::MemoryPropertyFlags());
-		vk::UniqueDeviceMemory allocate(const vk::Buffer & buffer, const vk::MemoryPropertyFlags & flags = vk::MemoryPropertyFlags());
+		vk::PhysicalDevice physical_device() const noexcept {
+			return _physical_device;
+		}
 		
-	protected:
-		vk::ApplicationInfo _application_info;
+		vk::Device device() const noexcept {
+			return _device.get();
+		}
 		
-		int find_memory_type(const vk::MemoryRequirements & requirements, const vk::MemoryPropertyFlags & flags);
-		
-		void create_instance(bool enableValidations, std::vector<const char *> extensions = {});
-		void setup_physical_device();
-		void setup_graphics_device(std::vector<const char *> extensions = {});
-		
-		vk::Optional<const vk::AllocationCallbacks> _allocator = nullptr;
-		
-		// Layers which are part of the current instance/device:
-		std::vector<const char*> _layers;
-
-		vk::UniqueInstance _instance;
-		DebugReport _debug_report;
-
-		vk::UniqueDevice _device;
-
+	private:
+		vk::Instance _instance;
 		vk::PhysicalDevice _physical_device;
-		vk::PhysicalDeviceMemoryProperties _memory_properties;
+		vk::UniqueDevice _device;
 		
-		std::uint32_t _graphics_queue = 0;
+		vk::Optional<const vk::AllocationCallbacks> _allocation_callbacks;
 	};
 }
