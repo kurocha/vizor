@@ -1,6 +1,6 @@
 # Teapot v2.2.0 configuration generated at 2017-10-14 14:27:46 +1300
 
-required_version "2.0"
+required_version "3.0"
 
 # Project Metadata
 
@@ -22,45 +22,68 @@ end
 
 # Build Targets
 
-define_target 'vizor-library' do |target|
-	target.build do
-		source_root = target.package.path + 'source'
-		copy headers: source_root.glob('Vizor/**/*.{h,hpp}')
-		build static_library: 'Vizor', source_files: source_root.glob('Vizor/**/*.cpp')
+define_target 'vizor-platform-xcb' do |target|
+	target.provides 'Vizor/Platform/XCB' do
+		append buildflags "-DVK_USE_PLATFORM_XCB_KHR"
+		append linkflags "-lxcb"
 	end
 	
-	target.depends 'Build/Files'
-	target.depends 'Build/Clang'
-	
-	target.depends :platform
+	target.provides :vizor_platform => 'Vizor/Platform/XCB'
+end
+
+define_target 'vizor-library' do |target|
 	target.depends 'Language/C++14', private: true
 	
 	target.depends 'Library/Logger'
 	target.depends 'Library/Units'
 	target.depends 'Library/Memory'
-	
+	target.depends 'Library/Streams'
+		
 	target.depends 'Library/vulkan'
 	
+	target.depends :vizor_platform
+	
 	target.provides 'Library/Vizor' do
-		append linkflags [
-			->{install_prefix + 'lib/libVizor.a'},
-		]
+		source_root = target.package.path + 'source'
+		
+		library_path = build static_library: 'Vizor', source_files: source_root.glob('Vizor/**/*.cpp')
+		
+		append linkflags library_path
+		append header_search_paths source_root
+	end
+end
+
+define_target "vizor-executable" do |target|
+	target.depends "Language/C++14", private: true
+	
+	target.depends "Library/Vizor"
+	
+	target.provides "Executable/Vizor" do
+		source_root = target.package.path + 'source'
+		
+		build executable: "Vizor", source_files: source_root.glob('main.cpp')
+	end
+end
+
+define_target "vizor-run" do |target|
+	target.depends "Executable/Vizor"
+	
+	target.provides "Run/Vizor" do |*arguments|
+		run executable: "Vizor", arguments: arguments
 	end
 end
 
 define_target 'vizor-test' do |target|
-	target.build do |*arguments|
-		test_root = target.package.path + 'test'
-		
-		run tests: 'Vizor', source_files: test_root.glob('Vizor/**/*.cpp'), arguments: arguments
-	end
-	
-	target.depends 'Language/C++14', private: true
+	target.depends 'Language/C++14'
 	
 	target.depends 'Library/UnitTest'
 	target.depends 'Library/Vizor'
 	
-	target.provides 'Test/Vizor'
+	target.provides 'Test/Vizor' do |*arguments|
+		test_root = target.package.path + 'test'
+		
+		run tests: 'Vizor', source_files: test_root.glob('Vizor/**/*.cpp'), arguments: arguments
+	end
 end
 
 # Configurations
