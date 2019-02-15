@@ -16,13 +16,13 @@ namespace Vizor
 	{
 	public:
 		DebugReport() {};
-		DebugReport(vk::Instance instance, const vk::AllocationCallbacks * allocator = nullptr);
+		DebugReport(vk::Instance instance, vk::Optional<const vk::AllocationCallbacks> allocation_callbacks = nullptr);
 		~DebugReport();
 		
 		DebugReport(const DebugReport &) = delete;
 		DebugReport & operator=(const DebugReport &) = delete;
 		
-		DebugReport(DebugReport && other) : _instance(other._instance), _allocator(other._allocator), _callback(other._callback)
+		DebugReport(DebugReport && other) : _instance(other._instance), _allocation_callbacks(other._allocation_callbacks), _callback(other._callback)
 		{
 			other._callback = nullptr;
 		}
@@ -38,7 +38,7 @@ namespace Vizor
 		
 	protected:
 		vk::Instance _instance;
-		const vk::AllocationCallbacks * _allocator = nullptr;
+		vk::Optional<const vk::AllocationCallbacks> _allocation_callbacks = nullptr;
 		
 		VkDebugReportCallbackEXT _callback = nullptr;
 	};
