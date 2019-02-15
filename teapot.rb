@@ -32,14 +32,14 @@ define_target 'vizor-platform-xcb' do |target|
 end
 
 define_target 'vizor-library' do |target|
-	target.depends 'Language/C++14', private: true
+	target.depends 'Language/C++14'
 	
-	target.depends 'Library/Logger'
-	target.depends 'Library/Units'
+	target.depends 'Library/Logger', public: true
+	target.depends 'Library/Units', public: true
 	target.depends 'Library/Memory'
 	target.depends 'Library/Streams'
 		
-	target.depends 'Library/vulkan'
+	target.depends 'Library/vulkan', public: true
 	
 	target.depends :vizor_platform
 	
