@@ -22,15 +22,6 @@ end
 
 # Build Targets
 
-define_target 'vizor-platform-xcb' do |target|
-	target.provides 'Vizor/Platform/XCB' do
-		append buildflags "-DVK_USE_PLATFORM_XCB_KHR"
-		append linkflags "-lxcb"
-	end
-	
-	target.provides :vizor_platform => 'Vizor/Platform/XCB'
-end
-
 define_target 'vizor-library' do |target|
 	target.depends 'Language/C++14'
 	
@@ -41,7 +32,7 @@ define_target 'vizor-library' do |target|
 		
 	target.depends 'Library/vulkan', public: true
 	
-	target.depends :vizor_platform
+	target.depends :vulkan_platform, public: true
 	
 	target.provides 'Library/Vizor' do
 		source_root = target.package.path + 'source'
@@ -113,4 +104,12 @@ define_configuration "vizor" do |configuration|
 	configuration.require 'memory'
 	
 	configuration.require 'vulkan-sdk'
+	
+	host /darwin/ do
+		configuration.require 'vulkan-sdk-darwin'
+	end
+	
+	host /linux/ do
+		configuration.require 'vulkan-sdk-linux'
+	end
 end
