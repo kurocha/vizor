@@ -40,7 +40,7 @@ define_target 'vizor-library' do |target|
 		library_path = build static_library: 'Vizor', source_files: source_root.glob('Vizor/**/*.cpp')
 		
 		append linkflags library_path
-		append linkflags "-L", "/usr/lib/x86_64-linux-gnu"
+		# append linkflags "-L", "/usr/lib/x86_64-linux-gnu"
 		append header_search_paths source_root
 	end
 end
