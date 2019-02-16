@@ -5,10 +5,12 @@ addons:
   apt:
     sources:
       - ubuntu-toolchain-r-test
+      - ppa:paulo-miguel-dias/mesa
     packages:
       - libc++-dev
       - libx11-xcb-dev
       - libxrandr-dev
+      - xserver-xorg-video-intel
 
 matrix:
   include:
