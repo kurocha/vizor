@@ -17,10 +17,11 @@ matrix:
     - compiler: clang
     - compiler: gcc
       env: TARGETS="compiler-gcc"
+    - compiler: clang
+      os: osx
 
 install:
   - gem install teapot
-  - vulkaninfo
 
 # Run tests:
 script:
