@@ -15,6 +15,14 @@ namespace Vizor
 	class DebugReport
 	{
 	public:
+		struct Dispatch {
+			Dispatch() {}
+			Dispatch(vk::Instance instance);
+			
+			PFN_vkCreateDebugReportCallbackEXT vkCreateDebugReportCallbackEXT = nullptr;
+			PFN_vkDestroyDebugReportCallbackEXT vkDestroyDebugReportCallbackEXT = nullptr;
+		};
+		
 		DebugReport() {};
 		DebugReport(vk::Instance instance, vk::Optional<const vk::AllocationCallbacks> allocation_callbacks = nullptr);
 		~DebugReport();
@@ -22,15 +30,13 @@ namespace Vizor
 		DebugReport(const DebugReport &) = delete;
 		DebugReport & operator=(const DebugReport &) = delete;
 		
-		DebugReport(DebugReport && other) : _instance(other._instance), _allocation_callbacks(other._allocation_callbacks), _callback(other._callback)
+		DebugReport(DebugReport && other) : _instance(other._instance), _callback(std::move(other._callback))
 		{
-			other._callback = nullptr;
 		}
 		
 		DebugReport & operator=(DebugReport && other)
 		{
 			_instance = other._instance;
-			_allocator = other._allocator;
 			std::swap(_callback, other._callback);
 			
 			return *this;
@@ -38,8 +44,10 @@ namespace Vizor
 		
 	protected:
 		vk::Instance _instance;
-		vk::Optional<const vk::AllocationCallbacks> _allocation_callbacks = nullptr;
+		Dispatch _dispatch;
 		
-		VkDebugReportCallbackEXT _callback = nullptr;
+		using UniqueDebugReportCallbackEXT = vk::UniqueHandle<vk::DebugReportCallbackEXT,Dispatch>;
+		
+		UniqueDebugReportCallbackEXT _callback;
 	};
 }

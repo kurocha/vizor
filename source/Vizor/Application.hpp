@@ -10,7 +10,7 @@
 
 #include <vulkan/vulkan.hpp>
 
-#include "DebugReport.hpp"
+#include "Context.hpp"
 
 namespace Vizor
 {
@@ -19,39 +19,47 @@ namespace Vizor
 	public:
 		struct Prototype {
 			Prototype() {}
-			
 			bool enable_validations = false;
 			bool enable_swapchain = false;
 		};
 		
-		Application(const Prototype & prototype = Prototype());
+		using Layers = std::vector<const char *>;
+		using Extensions = std::vector<const char *>;
+		
+		Application(const Prototype & prototype = Prototype(), vk::Optional<const vk::AllocationCallbacks> allocation_callbacks = nullptr) : _prototype(prototype), _allocation_callbacks(allocation_callbacks) {}
+		
 		virtual ~Application();
 		
-		vk::Instance instance() const noexcept {
-			return _instance.get();
+		void prepare(vk::ApplicationInfo & application_info) const noexcept;
+		void prepare_instance(Layers & layers, Extensions & extensions) const noexcept;
+		vk::Instance instance();
+		
+		vk::PhysicalDevice physical_device();
+		
+		void prepare_device(Layers & layers, Extensions & extensions) const noexcept;
+		std::uint32_t find_graphics_queue_family_index(const vk::PhysicalDevice & physical_device) const noexcept;
+		vk::Device device();
+		
+		vk::Optional<const vk::AllocationCallbacks> allocation_callbacks() const noexcept {
+			return _allocation_callbacks;
 		}
 		
-		vk::PhysicalDevice physical_device() const noexcept {
-			return _physical_device;
+		Context context()
+		{
+			return Context(instance(), physical_device(), device(), _allocation_callbacks);
 		}
 		
 	protected:
-		vk::ApplicationInfo _application_info;
-		
+		Prototype _prototype;
 		vk::Optional<const vk::AllocationCallbacks> _allocation_callbacks = nullptr;
 		
-		void create_instance(bool enableValidations, std::vector<const char *> extensions = {});
-		void setup_physical_device();
-		void setup_graphics_device(std::vector<const char *> extensions = {});
+		vk::UniqueInstance setup_instance() const;
+		vk::PhysicalDevice setup_physical_device(const vk::Instance & instance) const;
+		vk::UniqueDevice setup_device(const vk::Instance & instance, const vk::PhysicalDevice & physical_device) const;
 		
-		// Layers which are part of the current instance/device:
-		std::vector<const char*> _layers;
-		
+	private:
 		vk::UniqueInstance _instance;
-		DebugReport _debug_report;
-		
 		vk::PhysicalDevice _physical_device;
-		
-
+		vk::UniqueDevice _device;
 	};
 }

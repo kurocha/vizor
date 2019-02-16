@@ -15,7 +15,8 @@ namespace Vizor
 	class Context
 	{
 	public:
-		Context(const vk::Instance & instance, const vk::PhysicalDevice & physical_device, vk::UniqueDevice && device, vk::Optional<const vk::AllocationCallbacks> allocation_callbacks = nullptr) : _instance(instance), _physical_device(physical_device), _device(device), _allocation_callbacks(allocation_callbacks) {}
+		Context(const vk::Instance & instance, const vk::PhysicalDevice & physical_device, const vk::Device & device, vk::Optional<const vk::AllocationCallbacks> allocation_callbacks = nullptr) : _instance(instance), _physical_device(physical_device), _device(device), _allocation_callbacks(allocation_callbacks) {}
+		
 		virtual ~Context();
 		
 		vk::Instance instance() const noexcept {
@@ -27,13 +28,17 @@ namespace Vizor
 		}
 		
 		vk::Device device() const noexcept {
-			return _device.get();
+			return _device;
 		}
 		
-	private:
+		vk::Optional<const vk::AllocationCallbacks> allocation_callbacks() const noexcept {
+			return _allocation_callbacks;
+		}
+		
+	protected:
 		vk::Instance _instance;
 		vk::PhysicalDevice _physical_device;
-		vk::UniqueDevice _device;
+		vk::Device _device;
 		
 		vk::Optional<const vk::AllocationCallbacks> _allocation_callbacks;
 	};

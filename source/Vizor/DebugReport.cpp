@@ -12,6 +12,13 @@
 
 namespace Vizor
 {
+	DebugReport::Dispatch::Dispatch(vk::Instance instance)
+	{
+		this->vkCreateDebugReportCallbackEXT = PFN_vkCreateDebugReportCallbackEXT(instance.getProcAddr("vkCreateDebugReportCallbackEXT"));
+		
+		this->vkDestroyDebugReportCallbackEXT = PFN_vkDestroyDebugReportCallbackEXT(instance.getProcAddr("vkDestroyDebugReportCallbackEXT"));
+	}
+	
 	static VkBool32 message_callback(VkDebugReportFlagsEXT flags, VkDebugReportObjectTypeEXT obj_type, uint64_t src_object, size_t location, int32_t code, const char* layer_prefix, const char* message, void* user_Data) {
 		
 		using namespace Logger;
@@ -26,23 +33,16 @@ namespace Vizor
 		return false;
 	}
 	
-	DebugReport::DebugReport(vk::Instance instance, const vk::AllocationCallbacks * allocator) : _instance(instance), _allocator(allocator)
+	DebugReport::DebugReport(vk::Instance instance, vk::Optional<const vk::AllocationCallbacks> allocation_callbacks) : _instance(instance), _dispatch(instance)
 	{
-		PFN_vkCreateDebugReportCallbackEXT vkCreateDebugReportCallbackEXT = (PFN_vkCreateDebugReportCallbackEXT)instance.getProcAddr("vkCreateDebugReportCallbackEXT");
-
 		auto info = vk::DebugReportCallbackCreateInfoEXT(vk::DebugReportFlagBitsEXT::eError | vk::DebugReportFlagBitsEXT::eDebug | vk::DebugReportFlagBitsEXT::eWarning
 			// | vk::DebugReportFlagBitsEXT::eInformation | vk::DebugReportFlagBitsEXT::ePerformanceWarning
 			, &message_callback, nullptr);
 		
-		vkCreateDebugReportCallbackEXT(_instance, reinterpret_cast<const VkDebugReportCallbackCreateInfoEXT*>(&info), reinterpret_cast<const VkAllocationCallbacks*>(_allocator), &_callback);
+		_callback = instance.createDebugReportCallbackEXTUnique(info, allocation_callbacks, _dispatch);
 	}
 	
 	DebugReport::~DebugReport()
 	{
-		if (_callback) {
-			PFN_vkDestroyDebugReportCallbackEXT vkDestroyDebugReportCallbackEXT = (PFN_vkDestroyDebugReportCallbackEXT)_instance.getProcAddr("vkDestroyDebugReportCallbackEXT");
-		
-			vkDestroyDebugReportCallbackEXT(_instance, _callback, reinterpret_cast<const VkAllocationCallbacks*>(_allocator));
-		}
 	}
 }

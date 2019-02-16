@@ -9,6 +9,7 @@
 #include <UnitTest/UnitTest.hpp>
 
 #include <Vizor/Application.hpp>
+#include <Vizor/Context.hpp>
 #include <Vizor/Allocator.hpp>
 
 namespace Vizor
