@@ -130,7 +130,7 @@ namespace Vizor
 		return physical_device;
 	}
 	
-	std::uint32_t Application::find_graphics_queue_family_index(const vk::PhysicalDevice & physical_device) const noexcept
+	std::uint32_t Application::find_graphics_queue_family_index(const vk::PhysicalDevice & physical_device) const
 	{
 		auto queue_families = physical_device.getQueueFamilyProperties();
 		

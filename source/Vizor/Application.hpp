@@ -37,7 +37,7 @@ namespace Vizor
 		vk::PhysicalDevice physical_device();
 		
 		void prepare_device(Layers & layers, Extensions & extensions) const noexcept;
-		std::uint32_t find_graphics_queue_family_index(const vk::PhysicalDevice & physical_device) const noexcept;
+		std::uint32_t find_graphics_queue_family_index(const vk::PhysicalDevice & physical_device) const;
 		vk::Device device();
 		
 		vk::Optional<const vk::AllocationCallbacks> allocation_callbacks() const noexcept {
