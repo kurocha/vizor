@@ -9,7 +9,7 @@
 #include <UnitTest/UnitTest.hpp>
 
 #include <Vizor/Application.hpp>
-#include <Vizor/Context.hpp>
+#include <Vizor/GraphicsContext.hpp>
 #include <Vizor/Allocator.hpp>
 
 namespace Vizor
@@ -20,7 +20,8 @@ namespace Vizor
 		{"it can allocate device local memory",
 			[](UnitTest::Examiner & examiner) {
 				Application application;
-				Allocator allocator(application.physical_device(), application.device());
+				GraphicsContext context(application.instance(), application.allocation_callbacks());
+				Allocator allocator(context.physical_device(), context.device());
 				
 				const std::size_t base_size = 1024*1024;
 				std::size_t i = 0;
@@ -42,7 +43,8 @@ namespace Vizor
 		{"it can allocate host visible memory",
 			[](UnitTest::Examiner & examiner) {
 				Application application;
-				Allocator allocator(application.physical_device(), application.device());
+				GraphicsContext context(application.instance(), application.allocation_callbacks());
+				Allocator allocator(context.physical_device(), context.device());
 				
 				const std::size_t base_size = 1024*1024;
 				std::size_t i = 0;

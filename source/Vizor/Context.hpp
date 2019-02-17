@@ -12,34 +12,24 @@
 
 namespace Vizor
 {
+	using Layers = std::vector<const char *>;
+	using Extensions = std::vector<const char *>;
+	using AllocationCallbacks = vk::Optional<const vk::AllocationCallbacks>;
+	
 	class Context
 	{
 	public:
-		Context(const vk::Instance & instance, const vk::PhysicalDevice & physical_device, const vk::Device & device, vk::Optional<const vk::AllocationCallbacks> allocation_callbacks = nullptr) : _instance(instance), _physical_device(physical_device), _device(device), _allocation_callbacks(allocation_callbacks) {}
-		
+		Context(vk::Instance instance, AllocationCallbacks allocation_callbacks = nullptr) : _instance(instance), _allocation_callbacks(allocation_callbacks) {}
 		virtual ~Context();
 		
-		vk::Instance instance() const noexcept {
-			return _instance;
-		}
+		vk::Instance instance() const noexcept {return _instance;}
 		
-		vk::PhysicalDevice physical_device() const noexcept {
-			return _physical_device;
-		}
-		
-		vk::Device device() const noexcept {
-			return _device;
-		}
-		
-		vk::Optional<const vk::AllocationCallbacks> allocation_callbacks() const noexcept {
+		AllocationCallbacks allocation_callbacks() const noexcept {
 			return _allocation_callbacks;
 		}
 		
-	protected:
+	private:
 		vk::Instance _instance;
-		vk::PhysicalDevice _physical_device;
-		vk::Device _device;
-		
-		vk::Optional<const vk::AllocationCallbacks> _allocation_callbacks;
+		AllocationCallbacks _allocation_callbacks;
 	};
 }
