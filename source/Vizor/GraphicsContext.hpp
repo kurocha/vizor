@@ -12,28 +12,15 @@
 
 namespace Vizor
 {
-	class GraphicsContext : public Context
+	class GraphicsContext : public DeviceContext
 	{
 	public:
-		using Context::Context;
+		GraphicsContext(const DeviceContext & device_context, vk::Queue graphics_queue) : DeviceContext(device_context), _graphics_queue(graphics_queue) {}
+		virtual ~GraphicsContext() {}
 		
-		virtual ~GraphicsContext();
-		
-		vk::PhysicalDevice physical_device();
-		vk::Device device();
+		vk::Queue graphics_queue() {return _graphics_queue;}
 		
 	protected:
-		virtual std::uint32_t find_graphics_queue_family_index(const vk::PhysicalDevice & physical_device) const;
-		virtual void prepare(Layers & layers, Extensions & extensions) const;
-		virtual void prepare(vk::DeviceCreateInfo & device_create_info) const;
-		
-	private:
-		vk::PhysicalDevice _physical_device;
-		vk::UniqueDevice _device;
-		
-		std::uint32_t _graphics_queue_family_index;
-		
-		virtual vk::PhysicalDevice setup_physical_device();
-		virtual vk::UniqueDevice setup_device();
+		vk::Queue _graphics_queue = nullptr;
 	};
 }

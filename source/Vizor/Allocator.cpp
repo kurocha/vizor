@@ -16,7 +16,7 @@ namespace Vizor
 {
 	using namespace Logger;
 	
-	Allocator::Allocator(const vk::PhysicalDevice & physical_device, const vk::Device & device) : _physical_device(physical_device), _device(device)
+	Allocator::Allocator(const DeviceContext & device_context) : DeviceContext(device_context)
 	{
 		_memory_properties = _physical_device.getMemoryProperties();
 

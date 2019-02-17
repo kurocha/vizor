@@ -8,31 +8,24 @@
 
 #pragma once
 
-#include <vulkan/vulkan.hpp>
+#include "Context.hpp"
 
 namespace Vizor
 {
-	class Allocator
+	class Allocator : public DeviceContext
 	{
 	public:
-		Allocator(const vk::PhysicalDevice & physical_device, const vk::Device & device);
+		Allocator(const DeviceContext & device_context);
 		virtual ~Allocator();
-		
-		vk::Optional<const vk::AllocationCallbacks> allocation_callbacks() {
-			return _allocation_callbacks;
-		}
 		
 		vk::UniqueDeviceMemory allocate(const vk::MemoryRequirements & requirements, const vk::MemoryPropertyFlags & flags = vk::MemoryPropertyFlags());
 		vk::UniqueDeviceMemory allocate(const vk::Image & image, const vk::MemoryPropertyFlags & flags = vk::MemoryPropertyFlags());
 		vk::UniqueDeviceMemory allocate(const vk::Buffer & buffer, const vk::MemoryPropertyFlags & flags = vk::MemoryPropertyFlags());
 		
-	private:
-		vk::PhysicalDevice _physical_device;
-		vk::PhysicalDeviceMemoryProperties _memory_properties;
-		
-		vk::Device _device;
-		vk::Optional<const vk::AllocationCallbacks> _allocation_callbacks = nullptr;
-		
+	protected:
 		int find_memory_type(const vk::MemoryRequirements & requirements, const vk::MemoryPropertyFlags & flags);
+		
+	private:
+		vk::PhysicalDeviceMemoryProperties _memory_properties;
 	};
 }

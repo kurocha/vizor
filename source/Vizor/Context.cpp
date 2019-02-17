@@ -10,7 +10,4 @@
 
 namespace Vizor
 {
-	Context::~Context()
-	{
-	}
 }

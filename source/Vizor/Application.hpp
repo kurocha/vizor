@@ -16,8 +16,9 @@ namespace Vizor
 	{
 	public:
 		Application(bool validations = false, AllocationCallbacks allocation_callbacks = nullptr) : _validations(validations), _allocation_callbacks(allocation_callbacks) {}
-		
 		virtual ~Application();
+		
+		Application(const Application &) = delete;
 		
 		vk::Instance instance();
 		
@@ -25,17 +26,21 @@ namespace Vizor
 			return _allocation_callbacks;
 		}
 		
-	protected:
-		virtual void prepare(vk::ApplicationInfo & application_info) const;
-		virtual void prepare(Layers & layers, Extensions & extensions) const;
-		virtual void prepare(vk::InstanceCreateInfo & instance_create_info) const;
-	
-	private:
-		AllocationCallbacks _allocation_callbacks;
-		vk::UniqueInstance _instance;
+		// Selects the first available physical device.
+		virtual vk::PhysicalDevice physical_device();
 		
+		PhysicalContext context() {return PhysicalContext(Context(instance(), allocation_callbacks()), physical_device());}
+		
+	protected:
+		virtual void setup_instance();
+		virtual void setup_instance(vk::ApplicationInfo & application_info);
+		virtual void setup_instance(vk::ApplicationInfo & application_info, Layers & layers, Extensions & extensions);
+		virtual void setup_instance(vk::InstanceCreateInfo & instance_create_info);
+		
+	private:
 		bool _validations = false;
 		
-		virtual vk::UniqueInstance setup_instance();
+		AllocationCallbacks _allocation_callbacks;
+		vk::UniqueInstance _instance;
 	};
 }
