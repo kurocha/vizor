@@ -8,8 +8,14 @@
 
 #include "GraphicsContext.hpp"
 
+#include <Logger/Console.hpp>
+#include <Units/Bytes.hpp>
+#include <Streams/Safe.hpp>
+
 namespace Vizor
 {
+	using namespace Logger;
+	
 	GraphicsContext::~GraphicsContext()
 	{
 	}
@@ -18,6 +24,17 @@ namespace Vizor
 	{
 		if (!_physical_device) {
 			_physical_device = setup_physical_device();
+			
+			auto properties = _physical_device.getProperties();
+			
+			// Print Device Details
+			Console::debug(
+				"Physical Device:", Streams::safe(properties.deviceName),
+				"API Version:", properties.apiVersion,
+				"Driver Version:", properties.driverVersion,
+				"Vendor ID:", properties.vendorID,
+				"Device ID:", properties.deviceID
+			);
 		}
 		
 		return _physical_device;
