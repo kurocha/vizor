@@ -15,7 +15,7 @@ namespace Vizor
 	class Application
 	{
 	public:
-		Application(AllocationCallbacks allocation_callbacks = nullptr) : _allocation_callbacks(allocation_callbacks) {}
+		Application(bool validations = false, AllocationCallbacks allocation_callbacks = nullptr) : _validations(validations), _allocation_callbacks(allocation_callbacks) {}
 		
 		virtual ~Application();
 		
@@ -33,6 +33,8 @@ namespace Vizor
 	private:
 		AllocationCallbacks _allocation_callbacks;
 		vk::UniqueInstance _instance;
+		
+		bool _validations = false;
 		
 		virtual vk::UniqueInstance setup_instance();
 	};

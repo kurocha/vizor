@@ -41,6 +41,11 @@ namespace Vizor
 	
 	void Application::prepare(Layers & layers, Extensions & extensions) const
 	{
+		if (_validations) {
+			layers.push_back("VK_LAYER_LUNARG_standard_validation");
+		}
+		
+		// extensions.push_back("VK_EXT_debug_report");
 	}
 	
 	vk::UniqueInstance Application::setup_instance()
