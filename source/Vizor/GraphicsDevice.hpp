@@ -21,19 +21,24 @@ namespace Vizor
 		GraphicsDevice(const GraphicsDevice &) = delete;
 		
 		vk::Device device();
-		vk::Queue graphics_queue() {return _graphics_queue;}
+		
+		std::uint32_t graphics_queue_family_index() const noexcept {return _graphics_queue_family_index;}
+		vk::Queue graphics_queue() const noexcept {return _graphics_queue;}
 		
 		GraphicsContext context() {return GraphicsContext(DeviceContext(*this, device()), graphics_queue());}
 		
 	protected:
-		virtual std::uint32_t find_graphics_queue_family_index() const;
+		virtual void prepare(Layers & layers, Extensions & extensions) const noexcept;
+		
+		virtual void setup_queues();
 		
 		virtual void setup_device();
 		virtual void setup_device(Layers & layers, Extensions & extensions);
 		virtual void setup_device(vk::DeviceCreateInfo & device_create_info);
 		
-	private:
 		vk::UniqueDevice _device;
+		
+		std::uint32_t _graphics_queue_family_index = -1;
 		vk::Queue _graphics_queue = nullptr;
 	};
 }

@@ -29,15 +29,22 @@ namespace Vizor
 		return _device.get();
 	}
 	
+	void GraphicsDevice::prepare(Layers & layers, Extensions & extensions) const noexcept
+	{
+		
+	}
+	
 	void GraphicsDevice::setup_device()
 	{
 		Layers layers;
 		Extensions extensions;
 		
+		prepare(layers, extensions);
+		
 		setup_device(layers, extensions);
 	}
 	
-	std::uint32_t GraphicsDevice::find_graphics_queue_family_index() const
+	void GraphicsDevice::setup_queues()
 	{
 		auto queue_family_properties = _physical_device.getQueueFamilyProperties();
 		
@@ -47,7 +54,9 @@ namespace Vizor
 			if (properties.queueCount == 0) continue;
 			
 			if (properties.queueFlags & vk::QueueFlagBits::eGraphics) {
-				return index;
+				_graphics_queue_family_index = index;
+				
+				return;
 			}
 		}
 		
@@ -56,12 +65,13 @@ namespace Vizor
 	
 	void GraphicsDevice::setup_device(Layers & layers, Extensions & extensions)
 	{
-		float queue_priority = 0.0f;
-		auto graphics_queue_family_index = find_graphics_queue_family_index();
+		float queue_priority = 1.0f;
+		
+		setup_queues();
 		
 		auto queue_info = vk::DeviceQueueCreateInfo()
 			.setQueueCount(1)
-			.setQueueFamilyIndex(graphics_queue_family_index)
+			.setQueueFamilyIndex(_graphics_queue_family_index)
 			.setPQueuePriorities(&queue_priority);
 		
 		auto device_create_info = vk::DeviceCreateInfo()
@@ -77,8 +87,6 @@ namespace Vizor
 		device_create_info.setPEnabledFeatures(&features);
 		
 		setup_device(device_create_info);
-		
-		_graphics_queue = _device->getQueue(graphics_queue_family_index, 0);
 	}
 	
 	void GraphicsDevice::setup_device(vk::DeviceCreateInfo & device_create_info)

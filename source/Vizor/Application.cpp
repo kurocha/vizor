@@ -54,7 +54,7 @@ namespace Vizor
 		Layers layers;
 		Extensions extensions;
 		
-		if (_validations) {
+		if (_enable_validations) {
 			layers.push_back("VK_LAYER_LUNARG_standard_validation");
 		}
 		
