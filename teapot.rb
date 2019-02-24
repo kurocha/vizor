@@ -30,7 +30,7 @@ define_target 'vizor-library' do |target|
 	target.depends 'Library/Memory'
 	target.depends 'Library/Streams'
 		
-	target.depends 'Library/vulkan', public: true
+	target.depends 'SDK/Vulkan', public: true
 	
 	target.depends :vulkan_platform, public: true
 	
@@ -108,9 +108,5 @@ define_configuration "vizor" do |configuration|
 	
 	host /darwin/ do
 		configuration.require 'vulkan-sdk-darwin'
-	end
-	
-	host /linux/ do
-		configuration.require 'vulkan-sdk-linux'
 	end
 end
