@@ -54,11 +54,21 @@ namespace Vizor
 		Layers layers;
 		Extensions extensions;
 		
-		if (_enable_validations) {
+		if (_configuration.enable_validations) {
 			layers.push_back("VK_LAYER_LUNARG_standard_validation");
 		}
 		
-		// extensions.push_back("VK_EXT_debug_report");
+		if (_configuration.enable_surfaces) {
+#if defined(VK_USE_PLATFORM_MACOS_MVK)
+			extensions.push_back(VK_KHR_SURFACE_EXTENSION_NAME);
+			extensions.push_back(VK_MVK_MACOS_SURFACE_EXTENSION_NAME);
+#elif defined(VK_USE_PLATFORM_XCB_KHR)
+			extensions.push_back(VK_KHR_SURFACE_EXTENSION_NAME);
+			extensions.push_back(VK_KHR_XCB_SURFACE_EXTENSION_NAME);
+#else
+			throw std::runtime_error("Surfaces are not supported on this platform!");
+#endif
+		}
 		
 		setup_instance(application_info, layers, extensions);
 	}
