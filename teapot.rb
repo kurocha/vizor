@@ -23,7 +23,7 @@ end
 # Build Targets
 
 define_target 'vizor-library' do |target|
-	target.depends 'Language/C++14'
+	target.depends 'Language/C++17'
 	
 	target.depends 'Library/Logger', public: true
 	target.depends 'Library/Units', public: true
@@ -46,7 +46,7 @@ define_target 'vizor-library' do |target|
 end
 
 define_target "vizor-executable" do |target|
-	target.depends "Language/C++14", private: true
+	target.depends "Language/C++17", private: true
 	
 	target.depends "Library/Vizor"
 	
@@ -66,7 +66,7 @@ define_target "vizor-run" do |target|
 end
 
 define_target 'vizor-test' do |target|
-	target.depends 'Language/C++14'
+	target.depends 'Language/C++17'
 	
 	target.depends 'Library/UnitTest'
 	target.depends 'Library/Vizor'

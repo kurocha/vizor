@@ -16,6 +16,7 @@ namespace Vizor
 	using Extensions = std::vector<const char *>;
 	using AllocationCallbacks = vk::Optional<const vk::AllocationCallbacks>;
 	
+	// A context is an interface which contains references to various related objects. It should not directly create or manage the life-cycles of objects, but rather is created from a concrete implementation which does that, e.g. `GraphicsDevice::context()` creates a `GraphicsContext`.
 	class Context
 	{
 	public:
@@ -31,29 +32,5 @@ namespace Vizor
 	protected:
 		vk::Instance _instance = nullptr;
 		AllocationCallbacks _allocation_callbacks = nullptr;
-	};
-	
-	class PhysicalContext : public Context
-	{
-	public:
-		PhysicalContext(const Context & context, vk::PhysicalDevice physical_device) : Context(context), _physical_device(physical_device) {}
-		virtual ~PhysicalContext() {}
-		
-		vk::PhysicalDevice physical_device() const noexcept {return _physical_device;}
-		
-	protected:
-		vk::PhysicalDevice _physical_device = nullptr;
-	};
-	
-	class DeviceContext : public PhysicalContext
-	{
-	public:
-		DeviceContext(const PhysicalContext & physical_context, vk::Device device) : PhysicalContext(physical_context), _device(device) {}
-		virtual ~DeviceContext() {}
-		
-		vk::Device device() const noexcept {return _device;}
-		
-	protected:
-		vk::Device _device = nullptr;
 	};
 }

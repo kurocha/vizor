@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Context.hpp"
+#include "PhysicalContext.hpp"
 
 namespace Vizor
 {
@@ -16,7 +16,7 @@ namespace Vizor
 	{
 	public:
 		struct Configuration {
-			bool enable_validations = false;
+			bool enable_validations = true;
 			bool enable_surfaces = true;
 		};
 		

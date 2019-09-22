@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Context.hpp"
+#include "DeviceContext.hpp"
 
 namespace Vizor
 {
