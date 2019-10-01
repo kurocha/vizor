@@ -16,7 +16,7 @@ namespace Vizor
 	{
 	public:
 		struct Configuration {
-			bool enable_validations = true;
+			bool enable_validations = false;
 			bool enable_surfaces = true;
 		};
 		
