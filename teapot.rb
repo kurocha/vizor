@@ -40,28 +40,7 @@ define_target 'vizor-library' do |target|
 		library_path = build static_library: 'Vizor', source_files: source_root.glob('Vizor/**/*.cpp')
 		
 		append linkflags library_path
-		# append linkflags "-L", "/usr/lib/x86_64-linux-gnu"
 		append header_search_paths source_root
-	end
-end
-
-define_target "vizor-executable" do |target|
-	target.depends "Language/C++17", private: true
-	
-	target.depends "Library/Vizor"
-	
-	target.provides "Executable/Vizor" do
-		source_root = target.package.path + 'source'
-		
-		build executable: "Vizor", source_files: source_root.glob('main.cpp')
-	end
-end
-
-define_target "vizor-run" do |target|
-	target.depends "Executable/Vizor"
-	
-	target.provides "Run/Vizor" do |*arguments|
-		run executable: "Vizor", arguments: arguments
 	end
 end
 
@@ -74,7 +53,7 @@ define_target 'vizor-test' do |target|
 	target.provides 'Test/Vizor' do |*arguments|
 		test_root = target.package.path + 'test'
 		
-		run tests: 'Vizor', source_files: test_root.glob('Vizor/**/*.cpp'), arguments: arguments
+		run source_files: test_root.glob('Vizor/**/*.cpp'), arguments: arguments
 	end
 end
 
