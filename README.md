@@ -2,7 +2,7 @@
 
 Vizor is a high level support library for Vulkan. It doesn't hide the implementation details, but provides higher level building blocks, while still encouraging you to use low-level interfaces where it makes sense to do so.
 
-[![Build Status](https://travis-ci.org/kurocha/vizor.svg?branch=master)](https://travis-ci.org/kurocha/vizor)
+[![Test Status](https://github.com/kurocha/vizor/workflows/Test/badge.svg)](https://github.com/kurocha/vizor/actions?workflow=Test)
 
 ## Setup
 
