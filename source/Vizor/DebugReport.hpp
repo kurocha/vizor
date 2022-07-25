@@ -15,7 +15,7 @@ namespace Vizor
 	class DebugReport
 	{
 	public:
-		struct Dispatch {
+		struct Dispatch : public vk::DispatchLoaderBase {
 			Dispatch() {}
 			Dispatch(vk::Instance instance);
 			

@@ -30,9 +30,7 @@ define_target 'vizor-library' do |target|
 	target.depends 'Library/Memory'
 	target.depends 'Library/Streams'
 		
-	target.depends 'SDK/Vulkan', public: true
-	
-	target.depends :vulkan_platform, public: true
+	target.depends 'Platform/Vulkan', public: true
 	
 	target.provides 'Library/Vizor' do
 		source_root = target.package.path + 'source'
@@ -73,7 +71,6 @@ define_configuration 'development' do |configuration|
 	configuration.require 'generate-cpp-class'
 	
 	configuration.require "generate-project"
-	configuration.require "generate-travis"
 end
 
 define_configuration "vizor" do |configuration|
@@ -83,9 +80,5 @@ define_configuration "vizor" do |configuration|
 	configuration.require 'units'
 	configuration.require 'memory'
 	
-	configuration.require 'vulkan-sdk'
-	
-	host /darwin/ do
-		configuration.require 'vulkan-sdk-darwin'
-	end
+	configuration.require 'vulkan'
 end
